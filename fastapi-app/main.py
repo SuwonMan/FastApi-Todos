@@ -60,6 +60,16 @@ def delete_todo(todo_id: int):
     save_todos(todos)
     return {"message": "To-Do item deleted"}
 
+# To-Do 검색 기능
+@app.get("/todos/search", response_model=list[TodoItem])
+def search_todos(q: str):
+    todos = load_todos()
+    q_lower = q.lower()
+    return [
+        todo for todo in todos
+        if q_lower in todo["title"].lower() or q_lower in todo["description"].lower()
+    ]
+
 # HTML 파일 서빙
 @app.get("/", response_class=HTMLResponse)
 def read_root():
